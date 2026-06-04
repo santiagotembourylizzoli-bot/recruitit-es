@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /admin/
+
+# Block AI training crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+Sitemap: https://recruitit.es/sitemap.xml
