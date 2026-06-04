@@ -1,0 +1,28 @@
+{
+  "name": "recruit-it-backend",
+  "version": "1.0.0",
+  "description": "Contact form backend for recruitit.es",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start":   "node src/index.js",
+    "dev":     "nodemon src/index.js",
+    "test":    "node --test src/**/*.test.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "cors":               "^2.8.5",
+    "dotenv":             "^16.4.5",
+    "express":            "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "express-validator":  "^7.1.0",
+    "helmet":             "^7.1.0",
+    "nodemailer":         "^6.9.14",
+    "sanitize-html":      "^2.13.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
