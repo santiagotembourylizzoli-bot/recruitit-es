@@ -3,10 +3,14 @@ import { env } from '../config/env.js';
 
 /* ─── Valid service options ───────────────────────────────────────────────── */
 export const SERVICE_OPTIONS = {
-  'scale-team':             'Scale My Team',
-  'senior-talent':          'Find Senior Talent',
-  'long-term-partnership':  'Long-Term Partnership',
+  'scale-team':             { es: 'Escalar Equipo',             en: 'Scale Team' },
+  'senior-talent':          { es: 'Talento Senior',             en: 'Senior Talent' },
+  'long-term-partnership':  { es: 'Partnership a Largo Plazo',  en: 'Long-term Partnership' },
 };
+
+export function getServiceLabel(service, lang = 'es') {
+  return SERVICE_OPTIONS[service]?.[lang] ?? service;
+}
 
 /**
  * Validation chain for POST /api/contact.
@@ -72,6 +76,13 @@ export const contactValidators = [
     .withMessage('Message is required.')
     .isLength({ min: 10, max: 2000 })
     .withMessage('Message must be between 10 and 2000 characters.'),
+
+  /* ── lang (optional — defaults to 'es') ─────────────────────────────── */
+  body('lang')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isIn(['es', 'en'])
+    .withMessage("Language must be 'es' or 'en'."),
 
   /* ── honeypot: bots fill this hidden field, humans leave it empty ─────── */
   body(env.honeypotField)

@@ -3,7 +3,7 @@ import sanitizeHtml             from 'sanitize-html';
 import {
   contactValidators,
   handleValidationErrors,
-  SERVICE_OPTIONS,
+  getServiceLabel,
 }                               from '../validators/contact.js';
 import { contactRateLimiter }   from '../middleware/rateLimiter.js';
 import { sendContactEmails }    from '../services/mailer.js';
@@ -53,6 +53,8 @@ contactRouter.post(
     const ip   = req.headers['x-forwarded-for']?.split(',')[0].trim() ?? req.ip;
     const raw  = req.body;
 
+    const lang = (raw.lang === 'en') ? 'en' : 'es';
+
     const data = {
       name:    sanitize(raw.name),
       company: sanitize(raw.company),
@@ -60,8 +62,9 @@ contactRouter.post(
       phone:   raw.phone ? sanitize(raw.phone) : null,
       service: raw.service,
       message: sanitize(raw.message),
+      lang,
       ip,
-      submittedAt: new Date().toLocaleString('en-GB', {
+      submittedAt: new Date().toLocaleString('es-ES', {
         timeZone:   'Europe/Madrid',
         dateStyle:  'medium',
         timeStyle:  'short',
@@ -76,20 +79,22 @@ contactRouter.post(
 
     /* ── 2. Build email payloads ──────────────────────────────────────── */
     const { html: notifyHtml, text: notifyText } = buildNotifyEmail(data);
-    const { html: confirmHtml, text: confirmText } = buildConfirmEmail(data);
+    const { html: confirmHtml, text: confirmText, subject: confirmSubject } = buildConfirmEmail(data);
 
     const notifyPayload = {
       html:         notifyHtml,
       text:         notifyText,
       name:         data.name,
-      serviceLabel: SERVICE_OPTIONS[data.service],
+      serviceLabel: getServiceLabel(data.service, data.lang),
       replyTo:      data.email,
+      lang:         data.lang,
     };
 
     const confirmPayload = {
-      html: confirmHtml,
-      text: confirmText,
-      to:   data.email,
+      html:    confirmHtml,
+      text:    confirmText,
+      subject: confirmSubject,
+      to:      data.email,
     };
 
     /* ── 3. Send emails ───────────────────────────────────────────────── */

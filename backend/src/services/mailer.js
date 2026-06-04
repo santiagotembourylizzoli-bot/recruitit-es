@@ -74,11 +74,11 @@ export async function sendContactEmails({ notifyPayload, confirmPayload }) {
       text:     notifyPayload.text,
     }),
 
-    /* ── Email 2: auto-reply to user ─────────────────────────────────────── */
+    /* ── Email 2: auto-reply to user (subject comes from template for i18n) */
     transport.sendMail({
       from:    env.emailFrom,
       to:      confirmPayload.to,
-      subject: 'We received your message — Recruit IT',
+      subject: confirmPayload.subject,
       html:    confirmPayload.html,
       text:    confirmPayload.text,
     }),

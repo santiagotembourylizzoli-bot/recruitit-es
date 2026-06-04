@@ -1,12 +1,12 @@
-import { SERVICE_OPTIONS } from '../validators/contact.js';
+import { getServiceLabel } from '../validators/contact.js';
 
 /**
  * HTML email sent to info@recruitit.es when a new lead submits the form.
  * Dark theme matching the Recruit IT brand (#0a0a0a, #ffffff).
  */
 export function buildNotifyEmail(data) {
-  const { name, company, email, phone, service, message, submittedAt, ip } = data;
-  const serviceLabel = SERVICE_OPTIONS[service] ?? service;
+  const { name, company, email, phone, service, message, lang = 'es', submittedAt, ip } = data;
+  const serviceLabel = getServiceLabel(service, lang);
 
   const html = `
 <!DOCTYPE html>
@@ -33,12 +33,18 @@ export function buildNotifyEmail(data) {
                       RecruitIT
                     </span>
                   </td>
-                  <td align="right">
+                  <td align="right" style="text-align:right;">
                     <span style="display:inline-block;padding:4px 12px;background:rgba(74,222,128,0.1);
                                  border:1px solid rgba(74,222,128,0.3);border-radius:9999px;
                                  font-size:11px;font-weight:600;letter-spacing:0.1em;
-                                 text-transform:uppercase;color:#4ade80;">
+                                 text-transform:uppercase;color:#4ade80;margin-right:6px;">
                       New Lead
+                    </span>
+                    <span style="display:inline-block;padding:4px 10px;background:#1a1a1a;
+                                 border:1px solid #3a3a3a;border-radius:9999px;
+                                 font-size:11px;font-weight:700;letter-spacing:0.08em;
+                                 text-transform:uppercase;color:#a3a3a3;">
+                      ${lang.toUpperCase()}
                     </span>
                   </td>
                 </tr>
